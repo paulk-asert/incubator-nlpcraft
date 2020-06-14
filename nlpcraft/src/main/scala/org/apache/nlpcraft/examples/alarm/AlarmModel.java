@@ -18,15 +18,11 @@
 package org.apache.nlpcraft.examples.alarm;
 
 import org.apache.nlpcraft.model.*;
+import java.time.*;
+import java.time.format.*;
+import java.util.*;
 
-import java.time.LocalDateTime;
-import java.time.ZoneId;
-import java.time.format.DateTimeFormatter;
-import java.util.List;
-import java.util.Timer;
-import java.util.TimerTask;
-
-import static java.time.temporal.ChronoUnit.MILLIS;
+import static java.time.temporal.ChronoUnit.*;
 
 /**
  * Alarm example data model.
@@ -58,6 +54,11 @@ public class AlarmModel extends NCModelFileAdapter {
      * @return Query result.
      */
     @NCIntentRef("alarm")
+    @NCIntentExample({
+        "Ping me in 3 minutes",
+        "Buzz me in an hour and 15mins",
+        "Set my alarm for 30s"
+    })
     private NCResult onMatch(
         NCIntentMatch ctx,
         @NCIntentTerm("nums") List<NCToken> numToks
