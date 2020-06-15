@@ -23,12 +23,12 @@ import static java.lang.annotation.ElementType.*;
 import static java.lang.annotation.RetentionPolicy.*;
 
 /**
- * Annotation to define one or more examples of the user input that should match a corresponding intent. This
+ * Annotation to define one or more samples of the user input that should match a corresponding intent. This
  * annotation can only be used together with {@link NCIntent} or {@link NCIntentRef} annotations on the callback
  * methods. Method can have multiple annotations of this type and each annotation can define multiple input
  * examples.
  * <p>
- * Note that the examples provided by this annotation not only serve the documentation purpose but are also
+ * Note that the samples provided by this annotation not only serve the documentation purpose but are also
  * used internally by various parts of NLPCraft for uint testing, synonym detection, etc. It is highly
  * advisable to provide multiple examples (the more the better) per each intent through this annotation.
  * <p>
@@ -45,9 +45,10 @@ import static java.lang.annotation.RetentionPolicy.*;
 @Documented
 @Retention(value=RUNTIME)
 @Target(value=METHOD)
-public @interface NCIntentExample {
+public @interface NCIntentSample {
     /**
-     * Gets set of user input examples that should match corresponding intent.
+     * Gets a list of user input samples that should match corresponding intent. This annotation should be
+     * attached the intent callback method.
      *
      * @return Set of user input examples that should match corresponding intent.
      */

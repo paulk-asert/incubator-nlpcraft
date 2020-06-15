@@ -58,7 +58,7 @@ public class PhoneModel extends NCModelFileAdapter {
         // Either organization, person or a phone number (or a combination of).
         "term(rcpt)={id == 'google:organization' || id == 'google:person' || id == 'google:phone_number'}[1,3]"
     )
-    @NCIntentExample({
+    @NCIntentSample({
         "Call to Apple office",
         "Can you please ping John Smith?",
         "Could you dial +7 (931) 188 34 58 and ask Mike?"

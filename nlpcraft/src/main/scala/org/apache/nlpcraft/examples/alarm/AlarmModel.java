@@ -54,7 +54,7 @@ public class AlarmModel extends NCModelFileAdapter {
      * @return Query result.
      */
     @NCIntentRef("alarm")
-    @NCIntentExample({
+    @NCIntentSample({
         "Ping me in 3 minutes",
         "Buzz me in an hour and 15mins",
         "Set my alarm for 30s"

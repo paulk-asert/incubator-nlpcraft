@@ -40,7 +40,7 @@ class LightSwitchModel extends NCModelFileAdapter("org/apache/nlpcraft/examples/
       * @return Query result to be sent to the REST caller.
       */
     @NCIntentRef("ls")
-    @NCIntentExample(Array(
+    @NCIntentSample(Array(
         "Turn the lights off in the entire house.",
         "Switch on the illumination in the master bedroom closet.",
         "Get the lights on.",

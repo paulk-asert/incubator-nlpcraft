@@ -221,7 +221,7 @@ public class WeatherModel extends NCModelFileAdapter {
      * @return Query result.
      */
     @NCIntent("intent=fcast term={id == 'wt:fcast'} term(city)={id == 'nlpcraft:city'}? term(date)={id == 'nlpcraft:date'}?")
-    @NCIntentExample({
+    @NCIntentSample({
         "What's the weather forecast in Moscow?"
     })
     public NCResult onForecastMatch(
@@ -239,7 +239,7 @@ public class WeatherModel extends NCModelFileAdapter {
      * @return Query result.
      */
     @NCIntent("intent=hist term={id == 'wt:hist'} term(city)={id == 'nlpcraft:city'}? term(date)={id == 'nlpcraft:date'}?")
-    @NCIntentExample({
+    @NCIntentSample({
         "What was the weather history in Moscow?"
     })
     public NCResult onHistoryMatch(
@@ -257,7 +257,7 @@ public class WeatherModel extends NCModelFileAdapter {
      * @return Query result.
      */
     @NCIntent("intent=curr term={id == 'wt:curr'} term(city)={id == 'nlpcraft:city'}? term(date)={id == 'nlpcraft:date'}?")
-    @NCIntentExample({
+    @NCIntentSample({
         "What's the current weather in Moscow"
     })
     public NCResult onCurrentMatch(

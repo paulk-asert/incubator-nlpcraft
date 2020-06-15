@@ -95,7 +95,7 @@ public class TimeModel extends NCModelFileAdapter {
      * @return Query result.
      */
     @NCIntent("intent=intent1 conv=false term={id=='x:time'}")
-    @NCIntentExample({
+    @NCIntentSample({
         "What's the local time?"
     })
     private NCResult onLocalMatch(NCIntentMatch ctx) {
@@ -129,7 +129,7 @@ public class TimeModel extends NCModelFileAdapter {
      * @return Query result.
      */
     @NCIntent("intent=intent2 term={id=='x:time'} term(city)={id=='nlpcraft:city'}")
-    @NCIntentExample({
+    @NCIntentSample({
         "What time is it now in New York City?",
         "What's the current time in Moscow?",
         "Show me time of the day in London.",
