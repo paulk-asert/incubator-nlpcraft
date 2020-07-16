@@ -39,8 +39,6 @@ import static java.time.format.FormatStyle.*;
  * It provides YAML response with time and timezone information.
  * <p>
  * See 'README.md' file in the same folder for running instructions.
- *
- * @see TimeTest
  */
 public class TimeModel extends NCModelFileAdapter {
     // Medium data formatter.
@@ -133,7 +131,7 @@ public class TimeModel extends NCModelFileAdapter {
         "What time is it now in New York City?",
         "What's the current time in Moscow?",
         "Show me time of the day in London.",
-        "Can you please give me the San Francisco's current date and time.",
+        "Can you please give me the San Francisco's current date and time."
     })
     private NCResult onRemoteMatch(@NCIntentTerm("city") NCToken cityTok) {
         String city = cityTok.meta("nlpcraft:city:city");

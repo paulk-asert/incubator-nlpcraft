@@ -246,6 +246,7 @@ object NCProbeEnrichmentManager extends NCService with NCOpenCensusModelStats {
           * @param errCode Error code.
           * @param msgName Message name.
           * @param log Log data.
+          * @param intentId Intent ID.
           */
         def respond(
             resType: Option[String],
@@ -253,7 +254,8 @@ object NCProbeEnrichmentManager extends NCService with NCOpenCensusModelStats {
             errMsg: Option[String],
             errCode: Option[Int],
             msgName: String,
-            log: Option[String]
+            log: Option[String],
+            intentId: Option[String]
         ): Unit = {
             require(errMsg.isDefined || (resType.isDefined && resBody.isDefined))
 
@@ -277,6 +279,7 @@ object NCProbeEnrichmentManager extends NCService with NCOpenCensusModelStats {
                 addOptional("resType", resType)
                 addOptional("resBody", resBody)
                 addOptional("log", log)
+                addOptional("intentId", intentId)
             }
 
             if (embeddedCbs.nonEmpty) {
@@ -291,6 +294,7 @@ object NCProbeEnrichmentManager extends NCService with NCOpenCensusModelStats {
                     override val getErrorCode: Int = msg.dataOpt[Int]("errorCode").getOrElse(0)
                     override def getProbeId: String = Config.id
                     override def getLogHolder: String = log.orNull
+                    override def getIntentId: String = intentId.orNull
                 }
 
                 // Call all embedded callbacks first.
@@ -342,6 +346,7 @@ object NCProbeEnrichmentManager extends NCService with NCOpenCensusModelStats {
                 Some(errMsg),
                 Some(errCode),
                 "P2S_ASK_RESULT",
+                None,
                 None
             )
 
@@ -466,6 +471,7 @@ object NCProbeEnrichmentManager extends NCService with NCOpenCensusModelStats {
                     Some(errMsg),
                     Some(errCode),
                     "P2S_ASK_RESULT",
+                    None,
                     None
                 )
 
@@ -554,7 +560,8 @@ object NCProbeEnrichmentManager extends NCService with NCOpenCensusModelStats {
             None,
             None,
             "P2S_ASK_RESULT",
-            log
+            log,
+            Option(res.getIntentId)
         )
         
         def onFinish(): Unit = {
@@ -625,6 +632,7 @@ object NCProbeEnrichmentManager extends NCService with NCOpenCensusModelStats {
                                 Some(e.getMessage), // User provided rejection message.
                                 Some(MODEL_REJECTION),
                                 "P2S_ASK_RESULT",
+                                None,
                                 None
                             )
                     }
@@ -653,6 +661,7 @@ object NCProbeEnrichmentManager extends NCService with NCOpenCensusModelStats {
                                 Some("Processing failed with unexpected error."), // System error message.
                                 Some(UNEXPECTED_ERROR),
                                 "P2S_ASK_RESULT",
+                                None,
                                 None
                             )
                     }

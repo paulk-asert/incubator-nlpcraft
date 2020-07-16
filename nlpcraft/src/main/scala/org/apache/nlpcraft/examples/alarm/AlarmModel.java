@@ -33,8 +33,6 @@ import static java.time.temporal.ChronoUnit.*;
  * simply print out "BEEP BEEP BEEP" in the probe console.
  * <p>
  * See 'README.md' file in the same folder for running instructions.
- *
- * @see AlarmTest
  */
 public class AlarmModel extends NCModelFileAdapter {
     private static final DateTimeFormatter FMT =
