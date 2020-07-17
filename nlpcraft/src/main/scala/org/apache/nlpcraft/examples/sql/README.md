@@ -38,8 +38,6 @@ embedded probe and starts it automatically:
  *  Run REST server:
     * **Main class:** `org.apache.nlpcraft.NCStart`
     * **Program arguments:** `-server`
- * To run unit test with embedded probe:
-    * **JUnit 5 test:** `org.apache.nlpcraft.examples.sql.SqlTest`
  * To run probe standalone and use your own [REST client](https://nlpcraft.apache.org/using-rest.html):
     * **Main class:** `org.apache.nlpcraft.NCStart`
     * **VM arguments:** `-Dconfig.override_with_env_vars=true`
