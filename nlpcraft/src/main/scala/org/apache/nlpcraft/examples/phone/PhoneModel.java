@@ -32,8 +32,6 @@ import java.util.stream.*;
  * Note also that this example is using class-based intent DSL (to demonstrate its usage).
  * <p>
  * See 'README.md' file in the same folder for running instructions.
- *
- * @see PhoneTest
  */
 public class PhoneModel extends NCModelFileAdapter {
     /**

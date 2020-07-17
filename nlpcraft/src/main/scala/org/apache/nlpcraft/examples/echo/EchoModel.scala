@@ -22,6 +22,8 @@ import java.util
 import com.google.gson.Gson
 import org.apache.nlpcraft.model._
 
+import scala.collection.JavaConverters._
+
 /**
   * Echo example data model.
   * <p>
@@ -59,4 +61,10 @@ class EchoModel extends NCModelAdapter("nlpcraft.echo.ex", "Echo Example Model",
 
         NCResult.json(new Gson().toJson(map))
     }
+
+    override def getExamples: util.Set[String] =
+        Set(
+            "LA weather last Friday",
+            "Just about any sentence you can imagine!"
+        ).asJava
 }

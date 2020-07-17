@@ -39,8 +39,6 @@ embedded probe and starts it automatically:
       * `CONFIG_FORCE_nlpcraft_server_tokenProviders.0=nlpcraft`
       * `CONFIG_FORCE_nlpcraft_server_tokenProviders.1=google`
     * **Program arguments:** `-server`
- * To run unit test with embedded probe:
-    * **JUnit 5 test:** `org.apache.nlpcraft.examples.phone.PhoneTest`
  * To run probe standalone and use your own [REST client](https://nlpcraft.apache.org/using-rest.html):
     * **Main class:** `org.apache.nlpcraft.NCStart`
     * **VM arguments:** `-Dconfig.override_with_env_vars=true`

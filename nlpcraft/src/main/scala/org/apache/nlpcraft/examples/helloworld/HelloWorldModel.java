@@ -22,6 +22,9 @@ import org.apache.nlpcraft.model.NCContext;
 import org.apache.nlpcraft.model.NCModelAdapter;
 import org.apache.nlpcraft.model.NCResult;
 
+import java.util.Collections;
+import java.util.Set;
+
 /**
  * Hello World example data model.
  * <p>
@@ -29,8 +32,6 @@ import org.apache.nlpcraft.model.NCResult;
  * This is the simplest user model that can be defined.
  * <p>
  * See 'README.md' file in the same folder for running instructions.
- * 
- * @see HelloWorldTest
  */
 public class HelloWorldModel extends NCModelAdapter {
     /**
@@ -47,6 +48,11 @@ public class HelloWorldModel extends NCModelAdapter {
         return NCResult.html(
             "Hello World! This model returns the same result for any input..."
         );
+    }
+
+    @Override
+    public Set<String> getExamples() {
+        return Collections.singleton("Hi!");
     }
 }
 

@@ -40,8 +40,6 @@ import static java.time.temporal.ChronoUnit.DAYS;
  * Note also that it also returns intent ID together with execution result which can be used in testing.
  * <p>
  * See 'README.md' file in the same folder for running instructions.
- *
- * @see WeatherTest
  */
 public class WeatherModel extends NCModelFileAdapter {
     // Please register your own account at https://darksky.net/dev/docs/libraries and
@@ -237,7 +235,7 @@ public class WeatherModel extends NCModelFileAdapter {
      */
     @NCIntent("intent=hist term={id == 'wt:hist'} term(city)={id == 'nlpcraft:city'}? term(date)={id == 'nlpcraft:date'}?")
     @NCIntentSample({
-        "What was the weather history in Moscow?"
+        "What the weather history in Mosco last week?"
     })
     public NCResult onHistoryMatch(
         NCIntentMatch ctx,
