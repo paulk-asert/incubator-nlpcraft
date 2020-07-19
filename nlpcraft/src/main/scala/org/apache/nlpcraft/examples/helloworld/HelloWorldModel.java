@@ -22,9 +22,6 @@ import org.apache.nlpcraft.model.NCContext;
 import org.apache.nlpcraft.model.NCModelAdapter;
 import org.apache.nlpcraft.model.NCResult;
 
-import java.util.Collections;
-import java.util.Set;
-
 /**
  * Hello World example data model.
  * <p>
@@ -48,11 +45,6 @@ public class HelloWorldModel extends NCModelAdapter {
         return NCResult.html(
             "Hello World! This model returns the same result for any input..."
         );
-    }
-
-    @Override
-    public Set<String> getExamples() {
-        return Collections.singleton("Hi!");
     }
 }
 

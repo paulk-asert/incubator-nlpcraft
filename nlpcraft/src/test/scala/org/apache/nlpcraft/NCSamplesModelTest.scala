@@ -17,7 +17,6 @@
 
 package org.apache.nlpcraft
 
-import org.apache.nlpcraft.common.NCE
 import org.apache.nlpcraft.common.ascii.NCAsciiTable
 import org.apache.nlpcraft.common.util.NCUtils
 import org.apache.nlpcraft.model.intent.impl.NCIntentDslCompiler
@@ -26,10 +25,8 @@ import org.apache.nlpcraft.model.{NCIntent, NCIntentRef, NCIntentSample, NCModel
 import org.apache.nlpcraft.probe.embedded.NCEmbeddedProbe
 import org.junit.jupiter.api.{Assertions, Test}
 
-import scala.collection.JavaConverters._
-
 /**
-  * TODO:
+  * TODO: add description and check all outputs
   */
 class NCSamplesModelTest {
     // TODO: add desc
@@ -45,63 +42,27 @@ class NCSamplesModelTest {
         NCUtils.sysEnv(PROP_MDLS) match {
             case Some(p) ⇒
                 val classes = getClasses(p)
-                val mdls = classes.map(cl ⇒ cl → cl.newInstance).toMap
-
-                val intentSamples = getIntentSamples(mdls)
-                val mdlSamples = getModelSamples(mdls, intentSamples)
-
-                validate(mdls, intentSamples, mdlSamples)
-
+                val samples = getSamples(classes.map(cl ⇒ cl → cl.newInstance.getId).toMap)
 
                 NCEmbeddedProbe.start(classes: _*)
 
-                try {
-                    processIntentsSamples(intentSamples)
-                    processModelSamples(mdlSamples)
-                }
+                try
+                    process(samples)
                 finally
                     NCEmbeddedProbe.stop()
-
-            case None ⇒ System.err.println(s"'$PROP_MDLS' is not defined") // TODO: warn
+            case None ⇒
+                System.err.println(s"'$PROP_MDLS' is not defined")
         }
-
-    def validate(
-        mdls: Map[Class[_ <: NCModel], NCModel],
-        intentSamples: Map[NCModel, Map[String, Set[String]]],
-        mdlSamples: Map[NCModel, Set[String]]
-    ): Unit = {
-        // TODO:
-    }
-
-    /**
-      *
-      * @param mdls
-      * @param intentSamples
-      * @return
-      */
-    private def getModelSamples(
-        mdls: Map[Class[_ <: NCModel], NCModel],
-        intentSamples: Map[NCModel, Map[String, Set[String]]]
-    ): Map[NCModel, Set[String]] = {
-        mdls.values.flatMap(mdl ⇒ {
-            val mdlSamples =
-                mdl.getExamples.asScala.toSet.diff(intentSamples.getOrElse(mdl, Map.empty).values.flatten.toSet)
-
-            if (mdlSamples.nonEmpty) Some(mdl → mdlSamples) else None
-        }).toMap
-    }
 
     /**
       *
       * @param samples
       */
-    private def processIntentsSamples(samples: Map[NCModel, Map[String, Set[String]]]): Unit = {
+    private def process(samples: Map[String, Map[String, Set[String]]]): Unit = {
         case class Error(text: String, intentId: String)
 
         val errs: Map[String, Seq[Error]] =
-            samples.filter(_._2.nonEmpty).flatMap { case (mdl, mdlSamples) ⇒
-                val mdlId = mdl.getId
-
+            samples.filter(_._2.nonEmpty).flatMap { case (mdlId, mdlSamples) ⇒
                 val cli = new NCTestClientBuilder().newBuilder.build
 
                 cli.open(mdlId)
@@ -111,13 +72,11 @@ class NCSamplesModelTest {
                         val res = cli.ask(sample)
 
                         if (res.isFailed)
-                             // TODO:
                             Some(Error(s"Request '$sample' executed with error '${res.getResultError.get()}'", intentId))
                         else if (intentId != res.getIntentId)
-                             // TODO:
-                             Some(Error(s"Request '$sample' executed for unexpected intent ID '${res.getIntentId}'", intentId))
+                            Some(Error(s"Request '$sample' executed for unexpected intent ID '${res.getIntentId}'", intentId))
                         else
-                             None
+                            None
                     }
 
                     val mdlErrs =
@@ -133,15 +92,10 @@ class NCSamplesModelTest {
         if (errs.nonEmpty) {
             val tbl = NCAsciiTable()
 
-            // TODO: headers
             tbl #= ("Model ID", "Intent ID", "Error")
 
-            for ((mdlId, errs) ← errs) {
-                tbl += (mdlId, "", "")
-
-                for (err ← errs.sortBy(_.intentId))
-                    tbl += ("", err.intentId, err.text)
-            }
+            for ((mdlId, errs) ← errs; err ← errs.sortBy(_.intentId))
+                tbl += (mdlId, err.intentId, err.text)
 
             System.err.println("Models intents samples errors.")
             System.err.println(tbl.toString)
@@ -151,83 +105,12 @@ class NCSamplesModelTest {
         else {
             val tbl = NCAsciiTable()
 
-            // TODO: headers
             tbl #= ("Model ID", "Intent ID", "Samples count")
 
-            for ((mdlId, seq) ← samples) {
-                tbl += (mdlId, "", "")
-
-                for ((intentId, samples) ← seq)
-                    tbl += ("", intentId, samples.size)
-            }
+            for ((mdlId, seq) ← samples; (intentId, samples) ← seq)
+                tbl += (mdlId, intentId, samples.size)
 
             println("Models intents samples tested.")
-            println(tbl.toString)
-        }
-    }
-
-    /**
-      *
-      * @param samples
-      */
-    private def processModelSamples(samples: Map[NCModel, Set[String]]): Unit = {
-        val errs: Map[String, Set[String]] =
-            samples.flatMap { case (mdl, mdlSamples) ⇒
-                val mdlId = mdl.getId
-
-                val cli = new NCTestClientBuilder().newBuilder.build
-
-                cli.open(mdlId)
-
-                try {
-                    def getError(sample: String): Option[String] = {
-                        val res = cli.ask(sample)
-
-                        if (res.isFailed)
-                            // TODO:
-                            Some(s"Request '$sample' executed with error '${res.getResultError.get()}'")
-                        else
-                            None
-                    }
-
-                    val mdlErrs =
-                        (for (sample ← mdlSamples)
-                            yield getError(sample)).flatten
-
-                    if (mdlErrs.nonEmpty) Some(mdlId → mdlErrs) else None
-                }
-                finally
-                    cli.close()
-            }
-
-        if (errs.nonEmpty) {
-            val tbl = NCAsciiTable()
-
-            // TODO: headers
-            tbl #= ("Model ID", "Error")
-
-            for ((mdlId, errs) ← errs) {
-                tbl += (mdlId,  "")
-
-                for (err ← errs)
-                    tbl += ("", err)
-            }
-
-            System.err.println("Models samples errors.")
-            System.err.println(tbl.toString)
-
-            Assertions.fail("See errors above")
-        }
-        else {
-            val tbl = NCAsciiTable()
-
-            // TODO: headers
-            tbl #= ("Model ID", "Samples count")
-
-            for ((mdl, samples) ← samples)
-                tbl += (mdl.getId, samples.size)
-
-            println("Models samples tested.")
             println(tbl.toString)
         }
     }
@@ -237,40 +120,64 @@ class NCSamplesModelTest {
       * @param mdls
       * @return
       */
-    private def getIntentSamples(mdls: Map[Class[_ <: NCModel], NCModel]): Map[NCModel, Map[String, Set[String]]] =
-        mdls.flatMap { case (claxx, mdl) ⇒
-            val samples = claxx.getDeclaredMethods.flatMap(method ⇒ {
-                val sample = method.getAnnotation(CLS_SAMPLE)
+    private def getSamples(mdls: Map[Class[_ <: NCModel], String]): Map[String, Map[String, Set[String]]] =
+        mdls.flatMap { case (claxx, mdlId) ⇒
+            var annFound = false
 
-                if (sample != null) {
-                    val cls = method.getAnnotation(CLS_INTENT)
+            val mdlData =
+                claxx.getDeclaredMethods.flatMap(method ⇒ {
+                    val sample = method.getAnnotation(CLS_SAMPLE)
+                    val intent = method.getAnnotation(CLS_INTENT)
+                    val ref = method.getAnnotation(CLS_INTENT_REF)
 
-                    val id =
-                        if (cls != null)
-                            NCIntentDslCompiler.compile(cls.value(), mdl.getId).id
-                        else {
-                            val ref = method.getAnnotation(CLS_INTENT_REF)
+                    if (sample != null || intent != null || ref != null) {
+                        annFound = true
 
-                            if (ref == null)
-                                // TODO:
-                                throw new NCE(
-                                    s"Model '${mdl.getId}' has sample annotation but doesn't have intent or " +
-                                        s"intent reference annotations"
-                                )
+                        def getId: String =
+                            if (intent != null)
+                                NCIntentDslCompiler.compile(intent.value(),mdlId).id
+                            else if (ref != null)
+                                ref.value().trim
+                            else
+                                throw new AssertionError()
 
-                            ref.value().trim
+                        if (sample != null) {
+                            if (intent == null && ref == null) {
+                                System.err.println(s"Samples for nothing [method=${method.getName}]")
+
+                                None
+                            }
+                            else {
+                                val samples = sample.value().toSet
+
+                                if (samples.isEmpty) {
+                                    System.err.println(s"Samples are empty [intent=$getId, method=${method.getName}]")
+
+                                    None
+                                }
+                                else
+                                    Some(getId → samples)
+                            }
                         }
+                        else {
+                            System.err.println(s"Samples are missed [intent=$getId, method=${method.getName}]")
 
-                    val intSamples = sample.value().toSet
+                            None
+                        }
+                    }
+                    else
+                        None
+                }).toMap
 
-                    if (intSamples.nonEmpty) Some(id → intSamples) else None
-                }
-                else
-                    None
-            }).toMap
+            if (mdlData.isEmpty) {
+                if (!annFound)
+                    System.err.println(s"Model '$mdlId' doesn't have intent annotations")
 
-            if (samples.nonEmpty) Some(mdl → samples) else None
-        }.toMap
+                None
+            }
+            else
+                Some(mdlId → mdlData)
+        }
 
     /**
       *
