@@ -429,12 +429,6 @@
             </dependency>
 
             <dependency>
-                <groupId>org.junit.jupiter</groupId>
-                <artifactId>junit-jupiter-engine</artifactId>
-                <version>${junit.ver}</version>
-            </dependency>
-
-            <dependency>
                 <groupId>com.google.cloud</groupId>
                 <artifactId>google-cloud-language</artifactId>
                 <version>${google.clould.language.ver}</version>
@@ -475,6 +469,13 @@
                 <artifactId>stanford-corenlp</artifactId>
                 <version>${stanford.corenlp.ver}</version>
                 <classifier>models</classifier>
+            </dependency>
+
+            <dependency>
+                <groupId>org.junit.jupiter</groupId>
+                <artifactId>junit-jupiter-engine</artifactId>
+                <version>${junit.ver}</version>
+                <scope>test</scope>
             </dependency>
         </dependencies>
     </dependencyManagement>
