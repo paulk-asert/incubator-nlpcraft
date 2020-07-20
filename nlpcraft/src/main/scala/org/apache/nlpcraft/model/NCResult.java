@@ -214,11 +214,20 @@ public class NCResult implements Serializable {
         return body;
     }
 
-    // TODO:
+    /**
+     * Get optional intent ID. 
+     *
+     * @return Intent ID or {@code null} if intent ID was not provided.
+     */
     public String getIntentId() {
         return intentId;
     }
 
+    /**
+     * Sets optional intent ID.
+     *
+     * @param intentId
+     */
     public void setIntentId(String intentId) {
         this.intentId = intentId;
     }
