@@ -25,6 +25,5 @@ import org.junit.jupiter.api.{Assertions, Test}
   */
 class NCSamplesModelTest {
     @Test
-    @throws[Exception]
     def test(): Unit = Assertions.assertTrue(NCSamplesModelValidator.isValid, "See error logs above")
 }
