@@ -196,5 +196,6 @@ object NCSamplesModelValidator extends App with LazyLogging {
             map(_.asSubclass(classOf[NCModel]))
     }
 
+    // All warnings and error printed to log.
     isValid
 }
