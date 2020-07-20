@@ -38,21 +38,30 @@ object NCSamplesModelValidator extends App with LazyLogging {
     @throws[Exception]
     def isValid: Boolean =
         NCUtils.sysEnv(PROP_MDLS) match {
-            case Some(p) ⇒
-                val classes = getClasses(p)
-                val samples = getSamples(classes.map(cl ⇒ cl → cl.newInstance.getId).toMap)
-
-                NCEmbeddedProbe.start(classes: _*)
-
-                try
-                    process(samples)
-                finally
-                    NCEmbeddedProbe.stop()
+            case Some(p) ⇒ isValid(getClasses(p))
             case None ⇒
                 logger.warn(s"'$PROP_MDLS' is not defined")
 
                 true
         }
+
+    @throws[Exception]
+    def isValid(claxx: Class[_ <: NCModel]): Boolean = isValid(Seq(claxx))
+
+    @throws[Exception]
+    def isValid(mdlId: String): Boolean = isValid(getClasses(mdlId))
+
+    @throws[Exception]
+    private def isValid(classes: Seq[Class[_ <: NCModel]]) = {
+        val samples = getSamples(classes.map(cl ⇒ cl → cl.newInstance.getId).toMap)
+
+        NCEmbeddedProbe.start(classes: _*)
+
+        try
+            process(samples)
+        finally
+            NCEmbeddedProbe.stop()
+    }
 
     /**
       *
