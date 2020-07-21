@@ -27,9 +27,9 @@ import org.apache.nlpcraft.probe.embedded.NCEmbeddedProbe
 /**
   * TODO: add description and check all outputs
   */
-object NCSamplesModelValidator extends App with LazyLogging {
+object NCTestAutoModelValidator extends App with LazyLogging {
     // TODO: add desc
-    private final val PROP_MDLS = "NLPCRAFT_TEST_MODELS"
+    private final val PROP_MODELS = "NLPCRAFT_TEST_MODELS"
 
     private final val CLS_SAMPLE = classOf[NCIntentSample]
     private final val CLS_INTENT = classOf[NCIntent]
@@ -37,10 +37,10 @@ object NCSamplesModelValidator extends App with LazyLogging {
 
     @throws[Exception]
     def isValid: Boolean =
-        NCUtils.sysEnv(PROP_MDLS) match {
+        NCUtils.sysEnv(PROP_MODELS) match {
             case Some(p) ⇒ isValid(getClasses(p))
             case None ⇒
-                logger.warn(s"'$PROP_MDLS' is not defined")
+                logger.warn(s"'$PROP_MODELS' is not defined")
 
                 true
         }

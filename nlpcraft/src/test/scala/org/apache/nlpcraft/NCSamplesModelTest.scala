@@ -17,7 +17,7 @@
 
 package org.apache.nlpcraft
 
-import org.apache.nlpcraft.model.tools.test.NCSamplesModelValidator
+import org.apache.nlpcraft.model.tools.test.NCTestAutoModelValidator
 import org.junit.jupiter.api.{Assertions, Test}
 
 /**
@@ -25,5 +25,5 @@ import org.junit.jupiter.api.{Assertions, Test}
   */
 class NCSamplesModelTest {
     @Test
-    def test(): Unit = Assertions.assertTrue(NCSamplesModelValidator.isValid, "See error logs above")
+    def test(): Unit = Assertions.assertTrue(NCTestAutoModelValidator.isValid, "See error logs above")
 }
